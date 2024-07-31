@@ -913,3 +913,21 @@ def plottsne(model, corpus):
     show(plot)
     
     return None
+
+
+def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV','PROPN'], language='NL', notags=True):
+    """https://spacy.io/api/annotation"""
+    if language == 'NL':
+        nlp = spacy.load("nl_core_news_md")
+    elif language =='FR':
+        nlp = spacy.load("fr_core_news_md")
+    elif language == 'EN':
+        nlp = spacy.load("en_core_web_lg")
+        
+    texts_out = []
+    texts_out2 = []
+    for sent in texts:
+        doc = nlp(" ".join(sent)) 
+        texts_out.append([token.lemma_ for token in doc if (token.pos_ in allowed_postags or notags)])
+        
+    return texts_out
