@@ -384,15 +384,15 @@ def plot_wordcloud(model, folderpath=None):
         
         wordcloud = WordCloud(
             background_color='white',
-            width=800,
-            height=600,
+            width=1800,
+            height=2400,
             max_words=100,
             colormap='gray'  # Using grayscale colormap for APA style
         ).fit_words(word_freq)
         
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis("off")
-        plt.title(f"Topic {t}", fontsize=14, fontname='Times New Roman')
+        plt.title(f"Topic {t}", fontsize=12, fontname='Arial')
         plt.tight_layout()
         
         if folderpath:
@@ -413,13 +413,13 @@ import os
 
 def plotbar(model, texts, folderpath=None):
     """
-    This function visualizes the term frequency and importance of keywords for each topic in a given topic model.
+    This function visualizes the term frequency and word weight of keywords for each topic in a given topic model.
     It first extracts the number of topics and the corresponding keywords from the model. Then, it flattens the
     provided text data to count the frequency of each word. Using this data, it constructs a DataFrame that includes
-    the word, its associated topic, importance weight, and word count. The function then identifies the global maximum
-    values for term frequency and importance across all topics to set uniform y-axis limits for easier comparison. It
+    the word, its associated topic, word weight, and word count. The function then identifies the global maximum
+    values for term frequency and word weight across all topics to set uniform y-axis limits for easier comparison. It
     creates a series of bar plots using Matplotlib, where each subplot represents a topic with term frequency and 
-    importance bars. The plots share consistent y-axis limits, ensuring a coherent comparison across topics.
+    word weight bars. The plots share consistent y-axis limits, ensuring a coherent comparison across topics.
 
     Parameters:
     model (gensim model): The topic model to visualize.
@@ -438,41 +438,46 @@ def plotbar(model, texts, folderpath=None):
     # Prepare data for plotting
     plot_data = []
     for topic_id, topic in topics:
-        for word, importance in topic:
-            plot_data.append([word, topic_id, importance, word_counter[word]])
+        for word, weight in topic:
+            plot_data.append([word, topic_id, weight, word_counter[word]])
 
-    df = pd.DataFrame(plot_data, columns=['word', 'topic_id', 'importance', 'word_count'])
+    df = pd.DataFrame(plot_data, columns=['word', 'topic_id', 'word weight', 'word_count'])
 
-    # Find global maximum values for word_count and importance
+    # Find global maximum values for word_count and word weight
     global_max_word_count = df['word_count'].max() * 1.1
-    global_max_importance = df['importance'].max() * 1.1
+    global_max_word_weight = df['word weight'].max() * 1.1
 
-    # Use grayscale colors
-    colors = ['#737373', '#bdbdbd']  # Dark gray and light gray for better contrast
+    # Use more visually distinct colors
+    colors = ['#708090', '#C0C0C0']  # Slate Gray and Silver for contrast
 
     for i in range(num_topics):
-        fig, ax = plt.subplots(figsize=(10, 5), dpi=300)
+        fig, ax = plt.subplots(figsize=(6.4, 4.5), dpi=300)  # Maintain size from your example
 
         topic_data = df[df.topic_id == i]
-        ax.bar(x=topic_data['word'], height=topic_data['word_count'], color=colors[0], width=0.5, alpha=0.7, label='Term frequency')
+        ax.bar(x=topic_data['word'], height=topic_data['word_count'], color=colors[0], width=0.4, alpha=0.8, label='Term Frequency')
         ax_twin = ax.twinx()
-        ax_twin.bar(x=topic_data['word'], height=topic_data['importance'], color=colors[1], width=0.3, alpha=0.7, label='Weight')
-        
-        ax.set_ylabel('Total term frequency', fontsize=12, fontname='Times New Roman', color='black')
-        ax_twin.set_ylabel('Weight', fontsize=12, fontname='Times New Roman', color='black')
+        ax_twin.bar(x=topic_data['word'], height=topic_data['word weight'], color=colors[1], width=0.4, alpha=0.6, label='Word Weight', align='edge')
+
+        ax.set_ylabel('Total Term Frequency', fontsize=12, fontname='Arial', color='gray')
+        ax_twin.set_ylabel('Word Weight', fontsize=12, fontname='Arial', color='gray')
         
         # Set y-limits to the global maximum values
         ax.set_ylim(0, global_max_word_count)
-        ax_twin.set_ylim(0, global_max_importance)
+        ax_twin.set_ylim(0, global_max_word_weight)
         
-        ax.set_title(f'Topic {i + 1}', fontsize=14, fontname='Times New Roman', color='black')
-        ax.tick_params(axis='x', rotation=45, labelsize=10, labelcolor='black')
-        ax.tick_params(axis='y', labelsize=10, labelcolor='black')
-        ax_twin.tick_params(axis='y', labelsize=10, labelcolor='black')
-        ax.set_xticklabels(topic_data['word'], fontname='Times New Roman')
+        ax.set_title(f'Topic {i}', fontsize=12, fontname='Arial', color='darkslategray')
+        ax.tick_params(axis='x', rotation=45, labelsize=10, labelcolor='darkslategray')
+        ax.tick_params(axis='y', labelsize=10, labelcolor='darkslategray')
+        ax_twin.tick_params(axis='y', labelsize=10, labelcolor='darkslategray')
+        ax.set_xticklabels(topic_data['word'], fontname='Arial')
 
-        ax.legend(loc='upper left', fontsize=8)
-        ax_twin.legend(loc='upper right', fontsize=8)
+        # Explicitly setting legend font to Arial
+        legend = ax.legend(loc='upper left', fontsize=10)
+        for text in legend.get_texts():
+            text.set_fontname('Arial')
+        legend_twin = ax_twin.legend(loc='upper right', fontsize=10)
+        for text in legend_twin.get_texts():
+            text.set_fontname('Arial')
 
         fig.tight_layout()
 
@@ -727,13 +732,19 @@ from matplotlib.ticker import FuncFormatter
 
 from IPython.display import display, HTML
 
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+import os
+from IPython.display import display, HTML
+
 def plottopicdocument2(model, corpus, folderpath=None):
     """
     This function visualizes the distribution of topics in a set of documents using a given topic model. 
     It plots two main aspects:
     1. The number of documents dominated by each topic.
     2. The total weightage of each topic across all documents.
-    It also generates an APA-style table listing the top seven words for each topic.
+    It also generates an APA-style table listing the top ten words for each topic along with their weights.
 
     Parameters:
     model (gensim model): The topic model to visualize.
@@ -752,65 +763,90 @@ def plottopicdocument2(model, corpus, folderpath=None):
     topic_weightage_by_doc = pd.DataFrame([dict(t) for t in topic_percentages])
     df_topic_weightage_by_doc = topic_weightage_by_doc.sum().to_frame(name='count').reset_index()
     
-    # Top 7 Keywords for each Topic
+    # Top 10 Keywords for each Topic with their weights
     num_topics = model.num_topics
-    topic_top7words = [(i, topic) for i, topics in model.show_topics(formatted=False, num_topics=num_topics) 
-                       for j, (topic, wt) in enumerate(topics) if j < 7]
+    topic_top10words = [(i, topic, wt) for i, topics in model.show_topics(formatted=False, num_topics=num_topics, num_words=10) 
+                        for j, (topic, wt) in enumerate(topics) if j < 10]
     
-    df_top7words_stacked = pd.DataFrame(topic_top7words, columns=['topic_id', 'words'])
-    df_top7words = df_top7words_stacked.groupby('topic_id').agg(', '.join)
-    df_top7words.reset_index(level=0, inplace=True)
+    df_top10words_stacked = pd.DataFrame(topic_top10words, columns=['topic_id', 'words', 'weight'])
+    df_top10words_stacked['words_with_weights'] = df_top10words_stacked.apply(lambda x: f"{x['words']}({x['weight']:.4f})", axis=1)
+    df_top10words = df_top10words_stacked.groupby('topic_id').agg({
+        'words_with_weights': ', '.join,
+        'weight': 'sum'
+    }).reset_index()
     
-    # APA style settings
-    plt.style.use('default')
-    
-    fig, ax1 = plt.subplots(1, 1, figsize=(10, 6), dpi=300, sharey=True)
-    
-    # Topic Distribution by Dominant Topics
-    ax1.bar(x='Dominant_Topic', height='count', data=df_dominant_topic_in_each_doc, width=0.5, color='gray', alpha=0.7, label='Number of Documents')
-    ax1.set_xticks(df_dominant_topic_in_each_doc['Dominant_Topic'])
-    tick_formatter = FuncFormatter(lambda x, pos: str(int(x)))
-    ax1.xaxis.set_major_formatter(tick_formatter)
-    ax1.set_ylabel('Number of Documents', fontsize=12, fontname='Times New Roman', color='black')
-    ax1.set_xlabel('Topics', fontsize=12, fontname='Times New Roman', color='black')
-    ax1.legend(loc='upper left', fontsize=10)
-    ax1.tick_params(axis='both', which='major', labelsize=10, labelcolor='black')
-    ax1.grid(False)  # Remove gridlines
-    plt.setp(ax1.get_xticklabels(), rotation=0, ha='center', fontsize=10, fontname='Times New Roman')
-    
-    # Total Topic Distribution by Weights
-    ax_twin = ax1.twinx()
-    ax_twin.bar(x='index', height="count", data=df_topic_weightage_by_doc, color='black', width=0.2, alpha=0.6, label='Total Topic Weight')
-    ax_twin.set_ylabel('Total Topic Weight', fontsize=12, fontname='Times New Roman', color='black')
-    ax_twin.legend(loc='upper right', fontsize=10)
-    ax_twin.tick_params(axis='both', which='major', labelsize=10, labelcolor='black')
-    ax_twin.grid(False)  # Remove gridlines
-    
+    # Increase the figure size for better readability
+    fig, ax1 = plt.subplots(figsize=(6.4, 4.5))  # Adjust the width (6.4) and height (4.5) as needed
+
+    # Create a bar plot for the distribution of dominant topics in each document
+    ax1.bar(df_dominant_topic_in_each_doc['Dominant_Topic'], df_dominant_topic_in_each_doc['count'], 
+            color='gray', edgecolor='black', width=0.5, label='Number of Documents')
+
+    # Set the axis labels for the histogram
+    ax1.set_xlabel('Topics', fontsize=12, fontname='Arial')
+    ax1.set_ylabel('Number of Documents', fontsize=12, fontname='Arial')
+
+    # Set the tick label font size and style for the histogram
+    ax1.tick_params(axis='x', labelsize=10)
+    ax1.tick_params(axis='y', labelsize=10)
+    plt.xticks(range(19), fontsize=10, fontname='Arial')
+    plt.yticks(fontsize=10, fontname='Arial')
+
+    # Remove the top and right spines for a cleaner look
+    ax1.spines['top'].set_visible(False)
+    ax1.spines['right'].set_visible(False)
+
+    # Create a second y-axis for the total topic weightage
+    ax2 = ax1.twinx()
+    ax2.bar(df_topic_weightage_by_doc['index'], df_topic_weightage_by_doc['count'], 
+            color='black', alpha=0.6, width=0.2, label='Total Topic Weight')
+
+    # Set the y-axis label for the total topic weightage
+    ax2.set_ylabel('Total Topic Weight', fontsize=12, fontname='Arial')
+
+    # Set the tick label font size and style for the scatter line
+    ax2.tick_params(axis='y', labelsize=10)
+    plt.yticks(fontsize=10, fontname='Arial')
+
+    # Move the legend to the top center and remove the border line
+    legend = fig.legend(loc="upper center", bbox_to_anchor=(0.5, 1), bbox_transform=ax1.transAxes, frameon=False)
+
+    # Set the legend font size and style
+    for text in legend.get_texts():
+        text.set_fontsize(10)
+        text.set_fontname('Arial')
+
+    # Remove grid lines for a cleaner appearance
+    ax1.grid(False)
+    ax2.grid(False)
+
     # Set uniform y-axis limits
     max_height = max(df_dominant_topic_in_each_doc['count'].max(), df_topic_weightage_by_doc['count'].max()) * 1.1
     ax1.set_ylim(0, max_height)
-    ax_twin.set_ylim(0, max_height)
-    
+    ax2.set_ylim(0, max_height)
+
     plt.tight_layout()
-    
+
     # Save or display the plot
     if folderpath:
         if not os.path.exists(folderpath):
             os.makedirs(folderpath)
-        plt.savefig(os.path.join(folderpath, 'topic_document_distribution.png'), bbox_inches='tight')
+        plt.savefig(os.path.join(folderpath, 'topic_document_distribution.png'), dpi=1600, bbox_inches='tight')
+        # Save the table to a CSV file
+        df_top10words.to_csv(os.path.join(folderpath, 'top_ten_words_with_weights.csv'), index=False)
         plt.show()
     else:
         plt.show()
-    
+
     # Close the figure after saving or displaying
     plt.close(fig)
-    
-    # Generate APA-style table for top seven words per topic
-    table_html = df_top7words.to_html(index=False, justify='center')
+
+    # Generate APA-style table for top ten words per topic with their weights
+    table_html = df_top10words[['topic_id', 'words_with_weights', 'weight']].to_html(index=False, justify='center')
     display(HTML(f"""
     <style>
         table {{
-            width: 50%;
+            width: 70%;
             border-collapse: collapse;
             margin: 25px 0;
             font-size: 16px;
@@ -827,11 +863,14 @@ def plottopicdocument2(model, corpus, folderpath=None):
         }}
     </style>
     <h2>Table 1</h2>
-    <p>Top Seven Words for Each Topic</p>
+    <p>Top Ten Words for Each Topic with Weights</p>
     {table_html}
     """))
 
     return None
+
+
+
 
 
 import random

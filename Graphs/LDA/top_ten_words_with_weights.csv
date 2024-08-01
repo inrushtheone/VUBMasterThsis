@@ -1,0 +1,21 @@
+topic_id,words_with_weights,weight
+0,"study(0.0080), network(0.0069), their(0.0069), research(0.0068), '(0.0061), new(0.0057), technology(0.0054), at(0.0049), knowledge(0.0048), different(0.0046)",0.06004128139466047
+1,"signal(0.0408), noise(0.0289), speech(0.0147), transform(0.0114), frequency(0.0113), band(0.0083), eye(0.0082), detection(0.0069), dc(0.0063), coefficient(0.0062)",0.14307029964402318
+2,"control(0.0119), function(0.0066), set(0.0058), robot(0.0058), state(0.0053), design(0.0053), space(0.0051), solution(0.0051), filter(0.0045), linear(0.0044)",0.059728214517235756
+3,"$(0.0127), design(0.0081), high(0.0059), at(0.0054), /(0.0053), video(0.0046), processor(0.0043), performance(0.0042), set(0.0041), word(0.0041)",0.05865004193037748
+4,"peer(0.0107), network(0.0073), two(0.0070), more(0.0049), performance(0.0049), :(0.0047), study(0.0042), structure(0.0042), datum(0.0040), at(0.0040)",0.05578753259032965
+5,"tree(0.0127), query(0.0103), datum(0.0087), class(0.0059), performance(0.0059), estimation(0.0055), translation(0.0054), kernel(0.0049), machine(0.0049), semantic(0.0046)",0.06895813858136535
+6,"""(0.0132), network(0.0106), agent(0.0102), program(0.0061), not(0.0051), performance(0.0050), or(0.0046), between(0.0044), one(0.0041), number(0.0040)",0.0672872718423605
+7,"datum(0.0268), software(0.0072), analysis(0.0062), design(0.0057), application(0.0056), data(0.0049), process(0.0049), set(0.0048), development(0.0048), tool(0.0047)",0.07568992907181382
+8,"service(0.0208), user(0.0160), information(0.0093), web(0.0093), search(0.0071), provide(0.0063), network(0.0062), resource(0.0061), application(0.0055), access(0.0051)",0.09167699795216322
+9,"signal(0.0103), parameter(0.0092), delay(0.0091), output(0.0085), water(0.0083), fuzzy(0.0079), adaptive(0.0076), neural(0.0071), optimization(0.0065), control(0.0061)",0.08057683473452926
+10,"traffic(0.0098), job(0.0072), retailer(0.0059), decision(0.0055), user(0.0050), contract(0.0048), recommender(0.0048), information(0.0048), voting(0.0048), batch(0.0047)",0.05719864834100008
+11,"game(0.0097), test(0.0076), cost(0.0067), process(0.0056), assessment(0.0048), information(0.0042), firm(0.0041), two(0.0037), entropy(0.0037), project(0.0035)",0.05356857320293784
+12,"channel(0.0275), performance(0.0173), code(0.0159), scheme(0.0121), interference(0.0114), cache(0.0087), rate(0.0069), process(0.0066), decode(0.0058), simulation(0.0056)",0.11783223692327738
+13,"image(0.0316), feature(0.0166), object(0.0086), classification(0.0060), video(0.0060), recognition(0.0058), two(0.0057), classifier(0.0055), region(0.0054), technique(0.0053)",0.09668668592348695
+14,"graph(0.0150), network(0.0117), power(0.0098), scheme(0.0098), number(0.0092), k(0.0067), at(0.0062), energy(0.0056), give(0.0055), two(0.0052)",0.08471530908718705
+15,"%(0.0092), two(0.0074), datum(0.0072), patient(0.0069), brain(0.0060), disease(0.0059), rate(0.0055), cell(0.0054), analysis(0.0052), obtain(0.0046)",0.06330602150410414
+16,"architecture(0.0214), logic(0.0180), application(0.0140), mobile(0.0107), device(0.0099), phone(0.0066), architectural(0.0062), fpga(0.0060), design(0.0059), hardware(0.0055)",0.10413435380905867
+17,"or(0.0060), risk(0.0054), study(0.0048), not(0.0048), self(0.0047), information(0.0043), well(0.0043), their(0.0043), game(0.0042), action(0.0041)",0.046976573299616575
+18,"user(0.0107), process(0.0079), language(0.0072), information(0.0051), or(0.0051), they(0.0049), level(0.0044), context(0.0043), provide(0.0040), property(0.0039)",0.05753123154863715
+19,"network(0.0231), node(0.0215), security(0.0114), sensor(0.0083), routing(0.0076), protocol(0.0070), study(0.0065), energy(0.0063), wireless(0.0054), not(0.0048)",0.10169037850573659
