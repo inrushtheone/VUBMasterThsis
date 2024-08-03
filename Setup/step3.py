@@ -643,7 +643,7 @@ def createtsne(model,corpus):
     topic_num = np.argmax(arr, axis=1)
 
     # tSNE Dimension Reduction
-    tsne_model = TSNE(n_components=2, verbose=1, random_state=0, angle=.99, init='pca')
+    tsne_model = TSNE(n_components=2, verbose=1, random_state=88, angle=.99, init='pca')
     tsne_outcome = tsne_model.fit_transform(arr)
     
     return tsne_outcome, topic_num
@@ -871,7 +871,73 @@ def plottopicdocument2(model, corpus, folderpath=None):
 
 
 
+def show_tsne_apa_style(model0, corpus0, legendtype='marker', legend=False, filepath=None):
+    """
+    Visualize t-SNE clustering of an LDA model using matplotlib in APA style with Arial font and grayscale markers.
+    
+    Parameters:
+    model0 : LDA model
+        The trained LDA model.
+    corpus0 : list
+        The corpus on which the LDA model was trained.
+    legendtype : str, optional
+        Type of legend to use ('color' or 'marker'). Default is 'marker'.
+    legend : bool, optional
+        Whether to display the legend. Default is False.
+    filepath : str, optional
+        Path to save the figure. If None, the figure is displayed. Default is None.
+    
+    Returns:
+    None
+    """
+    
+    # Generate t-SNE and topic numbers
+    tsne0, topic_num0 = createtsne(model0, corpus0)
 
+    # Define grayscale colors for up to 20 categories
+    gray_scale_intensity = np.linspace(0, 1, 20)
+    colors = plt.cm.gray(gray_scale_intensity)  # Using matplotlib's grayscale colormap
+    
+    markers = ['o', 'v', '^', '<', '>', 's', 'p', '*', '+', 'x', 'D', 'd', 'P', 'H', 'X', '8', 'h', '>', '<', '|']
+    
+    # Ensure Arial is used as font
+    plt.rcParams['font.family'] = 'Arial'
+    
+    # Create the plot
+    fig, ax = plt.subplots(figsize=(8, 6))  # Size in inches to suit APA style
+
+    for idx, color in enumerate(colors):
+        # Filter data by topic
+        indices = np.where(topic_num0 == idx)
+        x_vals = tsne0[indices, 0].ravel()
+        y_vals = tsne0[indices, 1].ravel()
+        
+        # Scatter plot for each topic
+        ax.scatter(x_vals, y_vals, color=[color], marker=markers[idx % len(markers)], label=f'Topic {idx}')
+
+    # Add legend with marker features if specified
+    if legend and legendtype == 'marker':
+        legend_elements = [Line2D([0], [0], marker=markers[i], color='w', label=f'Topic {i}',
+                                  markerfacecolor=colors[i], markersize=8) for i in range(len(set(topic_num0)))]
+        ax.legend(handles=legend_elements, loc='best', title='Dominant topic', frameon=False)
+
+    # Setting axis visibility off for cleaner APA style visuals
+    ax.axis('off')
+    
+    # Title and labels (optional based on preference and requirement)
+    #ax.set_title('t-SNE Clustering of Topics', fontsize=14)
+    
+    # Save the plot if filepath is provided
+    if filepath:
+        if not os.path.exists(os.path.dirname(filepath)):
+            os.makedirs(os.path.dirname(filepath))
+        plt.savefig(filepath, format='png', dpi=300, bbox_inches='tight')
+        plt.close(fig)  # Close the figure to free up memory
+    else:
+        # Display the plot
+        plt.show()
+
+    return None
 
 import random
 def plottsne(model, corpus):
@@ -895,7 +961,7 @@ def plottsne(model, corpus):
     topic_num = np.argmax(arr, axis=1)
 
     # Perform t-SNE dimensionality reduction
-    tsne_model = TSNE(n_components=2, verbose=1, random_state=0, angle=0.99, init='pca')
+    tsne_model = TSNE(n_components=2, verbose=1, random_state=88, angle=0.99, init='pca')
     tsne_lda = tsne_model.fit_transform(arr)
 
     # Bokeh plot setup
@@ -959,19 +1025,19 @@ def plot_citation_percentiles(lda_model, corpus, n_citation, color='viridis', fi
     
     # Add color bar for reference
     cbar = plt.colorbar(scatter)
-    cbar.set_label('Citation Percentile', fontsize=14, fontname='Times New Roman')
+    cbar.set_label('Citation Percentile', fontsize=14, fontname='Arial')
     
     # Label the axes and title in Times New Roman for APA style
-    plt.xlabel('t-sne dimension 1', fontsize=14, fontname='Times New Roman', color='black')
-    plt.ylabel('t-sne dimension 2', fontsize=14, fontname='Times New Roman', color='black')
-    plt.title('', fontsize=16, fontname='Times New Roman', color='black')
+    plt.xlabel('t-sne dimension 1', fontsize=14, fontname='Arial', color='black')
+    plt.ylabel('t-sne dimension 2', fontsize=14, fontname='Arial', color='black')
+    plt.title('', fontsize=16, fontname='Arial', color='black')
     
     # Customize tick parameters
     plt.tick_params(axis='both', which='major', labelsize=12, labelcolor='black')
     
     # Set font properties for APA style
-    plt.xticks(fontsize=12, fontname='Times New Roman')
-    plt.yticks(fontsize=12, fontname='Times New Roman')
+    plt.xticks(fontsize=12, fontname='Arial')
+    plt.yticks(fontsize=12, fontname='Arial')
     
     # Remove gridlines
     plt.grid(False)
